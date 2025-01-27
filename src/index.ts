@@ -29,6 +29,25 @@ const defaultOptions: SpamOptions = {
 	additionalMappings: [],
 };
 
+const variations = [
+	{
+		replaceNumbers: true,
+		replaceEmojis: true,
+	},
+	{
+		replaceNumbers: false,
+		replaceEmojis: true,
+	},
+	{
+		replaceNumbers: true,
+		replaceEmojis: false,
+	},
+	{
+		replaceNumbers: false,
+		replaceEmojis: false,
+	},
+] as const;
+
 /**
  * Identifies if spam is likely to be present in the text
  * @param text Text to check
@@ -41,15 +60,15 @@ export function identify(
 ): boolean {
 	const opts = { ...defaultOptions, ...options };
 
-	const normalisedText = normalise(text, {
-		removeWhitespace: "all",
-		replaceNumbers: true,
-		replacePunctuation: true,
+	return variations.some((config) => {
+		const normalisedText = normalise(text, {
+			removeWhitespace: "all",
+			replacePunctuation: true,
+			...config,
+		});
+
+		return [...spamMap, ...(opts.additionalMappings ?? [])].some((spamWord) =>
+			normalisedText.includes(spamWord),
+		);
 	});
-
-	const isSpam = [...spamMap, ...(opts.additionalMappings ?? [])].some(
-		(spamWord) => normalisedText.includes(spamWord),
-	);
-
-	return isSpam;
 }

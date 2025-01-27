@@ -35,4 +35,10 @@ describe("identify spam", () => {
 		const expected = true;
 		expect(identify(input)).toBe(expected);
 	});
+
+	test("attempt to bypass with emojis", () => {
+		const input = "💗 like 💗 this 💗 post 💗";
+		const expected = true;
+		expect(identify(input)).toBe(expected);
+	});
 });
