@@ -1,56 +1,46 @@
-# kayle-normalise
+# kayle-spam
 
-Normalise human-readable text to a machine-readable format.
-
-Converts special characters to their closest match (by appearance).
+Detect spam in human-readable text.
 
 ## Usage
 
 Install the package:
 
 ```bash
-npm install kayle-normalise
+npm install kayle-spam
 ```
 
 Import the package:
 
 ```ts
-import { normalise } from "kayle-normalise";
+import { identify } from "kayle-spam";
 ```
 
-Use the `normalise` function:
+Use the `identify` function:
 
 ```ts
-const normalised = normalise("Hello, world!");
-console.log(normalised); // "hello world"
+const thisIsntSpam = identify("Hello, world!");
+console.log(thisIsntSpam); // false
 
-const hello = normalise("ⓗⓔⓛⓛⓞ");
-console.log(hello); // "hello"
+const thisIsSpam = identify("💗 like 💗 this 💗 post 💗");
+console.log(thisIsSpam); // true
 ```
 
 ## Options
 
-You can pass an options object to the `normalise` function to customise the behaviour:
+You can pass an options object to the `identify` function to add additional mappings:
 
 ```ts
-const normalised = normalise("Hell0, w🌍rld!", {
-	replaceNumbers: false,
-	replacePunctuation: true,
-	removeWhitespace: "some",
-	additionalMappings: {
-		"🌍": "o",
-	},
+const isSpam = identify("Hell0, w🌍rld!", {
+	additionalMappings: ["🌍"],
 });
 
-console.log(normalised); // "hell0 world"
+console.log(isSpam); // true (it contains "🌍" which we passed in the options)
 ```
 
 Available options:
 
-- `replaceNumbers`: Whether to replace numbers with their corresponding letters (0->o, 1->i, 3->e, 5->s). Defaults to `true`.
-- `replacePunctuation`: Whether to replace punctuation with an empty string. Defaults to `true`.
-- `removeWhitespace`: `all` to remove all whitespace, `some` to remove unnecessary whitespace, `none` to keep all whitespace. Defaults to `all`.
-- `additionalMappings`: Additional mappings to be used in the normalisation process. Defaults to `{}`.
+- `additionalMappings`: An array of strings to be used in the spam detection process. Defaults to `[]`.
 
 ## Tests
 

@@ -23,6 +23,7 @@ const spamMap = new Set([
 	"iwantyou",
 	"reactthis",
 	"iaddyou",
+	"soalone",
 ]);
 
 const defaultOptions: SpamOptions = {
